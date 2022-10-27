@@ -1,71 +1,149 @@
 // To parse this JSON data, do
 //
-//     final spaceXRocketModel = spaceXRocketModelFromJson(jsonString);
+//     final spaceXModel = spaceXModelFromJson(jsonString);
 
 import 'dart:convert';
 
-SpaceXRocketModel spaceXRocketModelFromJson(String str) => SpaceXRocketModel.fromJson(json.decode(str));
+// SpaceXModel spaceXModelFromJson(String str) => SpaceXModel.fromJson(json.decode(str));
 
-String spaceXRocketModelToJson(SpaceXRocketModel data) => json.encode(data.toJson());
+// String spaceXModelToJson(SpaceXModel data) => json.encode(data.toJson());
 
-class SpaceXRocketModel {
-    SpaceXRocketModel({
-        required this.height,
-        required this.diameter,
-        required this.mass,
-        required this.firstStage,
-        required this.secondStage,
-        required this.engines,
-        required this.landingLegs,
-        required this.payloadWeights,
-        required this.flickrImages,
-        required this.name,
-        required this.type,
-        required this.active,
-        required this.stages,
-        required this.boosters,
-        required this.costPerLaunch,
-        required this.successRatePct,
-        required this.firstFlight,
-        required this.country,
-        required this.company,
-        required this.wikipedia,
-        required this.description,
-        required this.id,
-    });
+class SpaceXModel {
+  SpaceXModel(
+      {required this.height,
+      required this.diameter,
+      required this.mass,
+      required this.flickrImages,
+      required this.name,
+      required this.type,
+      required this.active,
+      required this.stages,
+      required this.boosters,
+      required this.costPerLaunch,
+      required this.successRatePct,
+      required this.firstFlight,
+      required this.country,
+      required this.company,
+      required this.wikipedia,
+      required this.description,
+      required this.id,
+      required this.isFavourite});
 
-    Diameter height;
-    Diameter diameter;
-    Mass mass;
-    FirstStage firstStage;
-    SecondStage secondStage;
-    Engines engines;
-    LandingLegs landingLegs;
-    List<PayloadWeight> payloadWeights;
-    List<String> flickrImages;
-    String name;
-    String type;
-    bool active;
-    int stages;
-    int boosters;
-    int costPerLaunch;
-    int successRatePct;
-    DateTime firstFlight;
-    String country;
-    String company;
-    String wikipedia;
-    String description;
-    String id;
+  Diameter height;
+  Diameter diameter;
+  Mass mass;
+  List<String> flickrImages;
+  String name;
+  String type;
+  bool active;
+  int stages;
+  int boosters;
+  int costPerLaunch;
+  int successRatePct;
+  DateTime firstFlight;
+  String country;
+  String company;
+  String wikipedia;
+  String description;
+  String id;
+  bool isFavourite;
 
-    factory SpaceXRocketModel.fromJson(Map<String, dynamic> json) => SpaceXRocketModel(
+  /// ---- Getters ---- ///
+  Diameter get height1 => height;
+  Diameter get diameter1 => diameter;
+  Mass get mass1 => mass;
+  List<String> get flickerImages1 => flickrImages;
+  String get name1 => name;
+  String get type1 => type;
+  bool get active1 => active;
+  int get stages1 => stages;
+  int get boosters1 => boosters;
+  int get costPerLaunch1 => costPerLaunch;
+  int get successRatePct1 => successRatePct;
+  DateTime get firstFlight1 => firstFlight;
+  String get country1 => country;
+  String get company1 => company;
+  String get wikipedia1 => wikipedia;
+  String get description1 => description;
+  // String  get id1=>id;
+  bool get isFavourite1 => isFavourite;
+
+  /// ---- Setters ---- ///
+  set height1(Diameter newHeight) {
+    height = newHeight;
+  }
+
+  set diameter1(Diameter newdiameter) {
+    diameter = newdiameter;
+  }
+
+  set mass1(Mass newMass) {
+    mass = newMass;
+  }
+
+  set flickerImages1(List<String> newFlickerImages) {
+    flickrImages = newFlickerImages;
+  }
+
+  set name1(String newName) {
+    name = newName;
+  }
+
+  set type1(String newType) {
+    type = newType;
+  }
+
+  set active1(bool newActive) {
+    active = newActive;
+  }
+
+  set stages1(int newStages) {
+    stages = newStages;
+  }
+
+  set boosters1(int newBoosters) {
+    boosters = newBoosters;
+  }
+
+  set costPerLaunch1(int newCostPerLaunch) {
+    costPerLaunch = newCostPerLaunch;
+  }
+
+  set successRatePct1(int newSuccessRatePct) {
+    successRatePct = newSuccessRatePct;
+  }
+
+  set firstFlight1(DateTime newFirstFlight) {
+    firstFlight = newFirstFlight;
+  }
+
+  set country1(String newCountry) {
+    country = newCountry;
+  }
+
+  set company1(String newCompany) {
+    company = newCompany;
+  }
+
+  set wikipedia1(String newWikipedia) {
+    wikipedia = newWikipedia;
+  }
+
+  set description1(String newDescription) {
+    description = newDescription;
+  }
+
+  //  set id1(String newId){
+  //   id = newId;
+  //  }
+  set isFavourite1(bool newFavourite) {
+    isFavourite = newFavourite;
+  }
+
+  factory SpaceXModel.fromJson(Map<String, dynamic> json) => SpaceXModel(
         height: Diameter.fromJson(json["height"]),
         diameter: Diameter.fromJson(json["diameter"]),
         mass: Mass.fromJson(json["mass"]),
-        firstStage: FirstStage.fromJson(json["first_stage"]),
-        secondStage: SecondStage.fromJson(json["second_stage"]),
-        engines: Engines.fromJson(json["engines"]),
-        landingLegs: LandingLegs.fromJson(json["landing_legs"]),
-        payloadWeights: List<PayloadWeight>.from(json["payload_weights"].map((x) => PayloadWeight.fromJson(x))),
         flickrImages: List<String>.from(json["flickr_images"].map((x) => x)),
         name: json["name"],
         type: json["type"],
@@ -80,17 +158,13 @@ class SpaceXRocketModel {
         wikipedia: json["wikipedia"],
         description: json["description"],
         id: json["id"],
-    );
+        isFavourite: false,
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "height": height.toJson(),
         "diameter": diameter.toJson(),
         "mass": mass.toJson(),
-        "first_stage": firstStage.toJson(),
-        "second_stage": secondStage.toJson(),
-        "engines": engines.toJson(),
-        "landing_legs": landingLegs.toJson(),
-        "payload_weights": List<dynamic>.from(payloadWeights.map((x) => x.toJson())),
         "flickr_images": List<dynamic>.from(flickrImages.map((x) => x)),
         "name": name,
         "type": type,
@@ -99,307 +173,77 @@ class SpaceXRocketModel {
         "boosters": boosters,
         "cost_per_launch": costPerLaunch,
         "success_rate_pct": successRatePct,
-        "first_flight": "${firstFlight.year.toString().padLeft(4, '0')}-${firstFlight.month.toString().padLeft(2, '0')}-${firstFlight.day.toString().padLeft(2, '0')}",
+        "first_flight":
+            "${firstFlight.year.toString().padLeft(4, '0')}-${firstFlight.month.toString().padLeft(2, '0')}-${firstFlight.day.toString().padLeft(2, '0')}",
         "country": country,
         "company": company,
         "wikipedia": wikipedia,
         "description": description,
         "id": id,
-    };
+      };
 }
 
 class Diameter {
-    Diameter({
-        required this.meters,
-        required this.feet,
-    });
+  Diameter({
+    required this.meters,
+    required this.feet,
+  });
 
-    double meters;
-    double feet;
+  double meters;
+  double feet;
 
-    factory Diameter.fromJson(Map<String, dynamic> json) => Diameter(
+  /// ---- Getters ---- ////
+  double get meters1 => meters;
+  double get feet1 => feet;
+
+  /// ---- Setters ---- ///
+  set meters1(double newMeters) {
+    meters = newMeters;
+  }
+
+  set feet1(double newFeet) {
+    feet = newFeet;
+  }
+
+  factory Diameter.fromJson(Map<String, dynamic> json) => Diameter(
         meters: json["meters"].toDouble(),
         feet: json["feet"].toDouble(),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "meters": meters,
         "feet": feet,
-    };
-}
-
-class Engines {
-    Engines({
-       required  this.isp,
-       required  this.thrustSeaLevel,
-        required this.thrustVacuum,
-        required this.number,
-        required this.type,
-        required this.version,
-        required this.layout,
-        required this.engineLossMax,
-        required this.propellant1,
-        required this.propellant2,
-        required this.thrustToWeight,
-    });
-
-    Isp isp;
-    Thrust thrustSeaLevel;
-    Thrust thrustVacuum;
-    int number;
-    String type;
-    String version;
-    String layout;
-    int engineLossMax;
-    String propellant1;
-    String propellant2;
-    double thrustToWeight;
-
-    factory Engines.fromJson(Map<String, dynamic> json) => Engines(
-        isp: Isp.fromJson(json["isp"]),
-        thrustSeaLevel: Thrust.fromJson(json["thrust_sea_level"]),
-        thrustVacuum: Thrust.fromJson(json["thrust_vacuum"]),
-        number: json["number"],
-        type: json["type"],
-        version: json["version"],
-        layout: json["layout"],
-        engineLossMax: json["engine_loss_max"],
-        propellant1: json["propellant_1"],
-        propellant2: json["propellant_2"],
-        thrustToWeight: json["thrust_to_weight"].toDouble(),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "isp": isp.toJson(),
-        "thrust_sea_level": thrustSeaLevel.toJson(),
-        "thrust_vacuum": thrustVacuum.toJson(),
-        "number": number,
-        "type": type,
-        "version": version,
-        "layout": layout,
-        "engine_loss_max": engineLossMax,
-        "propellant_1": propellant1,
-        "propellant_2": propellant2,
-        "thrust_to_weight": thrustToWeight,
-    };
-}
-
-class Isp {
-    Isp({
-        required this.seaLevel,
-       required  this.vacuum,
-    });
-
-    int seaLevel;
-    int vacuum;
-
-    factory Isp.fromJson(Map<String, dynamic> json) => Isp(
-        seaLevel: json["sea_level"],
-        vacuum: json["vacuum"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "sea_level": seaLevel,
-        "vacuum": vacuum,
-    };
-}
-
-class Thrust {
-    Thrust({
-        required this.kN,
-        required this.lbf,
-    });
-
-    int kN;
-    int lbf;
-
-    factory Thrust.fromJson(Map<String, dynamic> json) => Thrust(
-        kN: json["kN"],
-        lbf: json["lbf"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "kN": kN,
-        "lbf": lbf,
-    };
-}
-
-class FirstStage {
-    FirstStage({
-        required this.thrustSeaLevel,
-        required this.thrustVacuum,
-        required this.reusable,
-        required this.engines,
-        required this.fuelAmountTons,
-        required this.burnTimeSec,
-    });
-
-    Thrust thrustSeaLevel;
-    Thrust thrustVacuum;
-    bool reusable;
-    int engines;
-    int fuelAmountTons;
-    int burnTimeSec;
-
-    factory FirstStage.fromJson(Map<String, dynamic> json) => FirstStage(
-        thrustSeaLevel: Thrust.fromJson(json["thrust_sea_level"]),
-        thrustVacuum: Thrust.fromJson(json["thrust_vacuum"]),
-        reusable: json["reusable"],
-        engines: json["engines"],
-        fuelAmountTons: json["fuel_amount_tons"],
-        burnTimeSec: json["burn_time_sec"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "thrust_sea_level": thrustSeaLevel.toJson(),
-        "thrust_vacuum": thrustVacuum.toJson(),
-        "reusable": reusable,
-        "engines": engines,
-        "fuel_amount_tons": fuelAmountTons,
-        "burn_time_sec": burnTimeSec,
-    };
-}
-
-class LandingLegs {
-    LandingLegs({
-        required this.number,
-        required this.material,
-    });
-
-    int number;
-    String material;
-
-    factory LandingLegs.fromJson(Map<String, dynamic> json) => LandingLegs(
-        number: json["number"],
-        material: json["material"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "number": number,
-        "material": material,
-    };
+      };
 }
 
 class Mass {
-    Mass({
-       required  this.kg,
-      required   this.lb,
-    });
+  Mass({
+    required this.kg,
+    required this.lb,
+  });
 
-    int kg;
-    int lb;
+  int kg;
+  int lb;
 
-    factory Mass.fromJson(Map<String, dynamic> json) => Mass(
+  /// ---- Getters ---- ///
+  int get kg1 => kg;
+  int get lb1 => lb;
+
+  /// ---- Setters ---- ///
+  set kg1(int newKg){
+    kg = newKg;
+  }
+  set lb1(int newlb){
+    kg = newlb;
+  }
+
+  factory Mass.fromJson(Map<String, dynamic> json) => Mass(
         kg: json["kg"],
         lb: json["lb"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "kg": kg,
         "lb": lb,
-    };
-}
-
-class PayloadWeight {
-    PayloadWeight({
-        required this.id,
-        required this.name,
-        required this.kg,
-        required this.lb,
-    });
-
-    String id;
-    String name;
-    int kg;
-    int lb;
-
-    factory PayloadWeight.fromJson(Map<String, dynamic> json) => PayloadWeight(
-        id: json["id"],
-        name: json["name"],
-        kg: json["kg"],
-        lb: json["lb"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "kg": kg,
-        "lb": lb,
-    };
-}
-
-class SecondStage {
-    SecondStage({
-        required this.thrust,
-        required this.payloads,
-       required  this.reusable,
-        required this.engines,
-        required this.fuelAmountTons,
-        required this.burnTimeSec,
-    });
-
-    Thrust thrust;
-    Payloads payloads;
-    bool reusable;
-    int engines;
-    int fuelAmountTons;
-    int burnTimeSec;
-
-    factory SecondStage.fromJson(Map<String, dynamic> json) => SecondStage(
-        thrust: Thrust.fromJson(json["thrust"]),
-        payloads: Payloads.fromJson(json["payloads"]),
-        reusable: json["reusable"],
-        engines: json["engines"],
-        fuelAmountTons: json["fuel_amount_tons"],
-        burnTimeSec: json["burn_time_sec"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "thrust": thrust.toJson(),
-        "payloads": payloads.toJson(),
-        "reusable": reusable,
-        "engines": engines,
-        "fuel_amount_tons": fuelAmountTons,
-        "burn_time_sec": burnTimeSec,
-    };
-}
-
-class Payloads {
-    Payloads({
-        required this.compositeFairing,
-        required this.option1,
-    });
-
-    CompositeFairing compositeFairing;
-    String option1;
-
-    factory Payloads.fromJson(Map<String, dynamic> json) => Payloads(
-        compositeFairing: CompositeFairing.fromJson(json["composite_fairing"]),
-        option1: json["option_1"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "composite_fairing": compositeFairing.toJson(),
-        "option_1": option1,
-    };
-}
-
-class CompositeFairing {
-    CompositeFairing({
-        required this.height,
-        required this.diameter,
-    });
-
-    Diameter height;
-    Diameter diameter;
-
-    factory CompositeFairing.fromJson(Map<String, dynamic> json) => CompositeFairing(
-        height: Diameter.fromJson(json["height"]),
-        diameter: Diameter.fromJson(json["diameter"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "height": height.toJson(),
-        "diameter": diameter.toJson(),
-    };
+      };
 }

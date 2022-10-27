@@ -25,9 +25,9 @@ class _TabContainerState extends State<TabContainer> {
     super.initState();
 
     originalList = [
-       SpaceXRocket(),
-     FavouriteRockets(),
-      UpcomingLaunches(),
+    SpaceXRocket(),
+    FavouriteRockets(),
+    UpcomingLaunches(),
     ];
     originalDic = {0: true, 1: false, 2: false};
     listScreens = [originalList!.first];
@@ -79,12 +79,12 @@ class _TabContainerState extends State<TabContainer> {
     });
 
     return BottomAppBar(
+      color: Theme.of(context).primaryColor,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: items,
       ),
-      color: Theme.of(context).primaryColor,
     );
   }
 
