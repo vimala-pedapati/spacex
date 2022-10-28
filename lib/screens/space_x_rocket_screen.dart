@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spacex/Database/database_helper.dart';
-import 'package:spacex/global.dart';
+ 
 import 'package:spacex/models/space_x_model.dart';
 import 'package:spacex/screens/rocket_description_page.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -16,25 +15,21 @@ class _SpaceXRocketState extends State<SpaceXRocket>
     with AutomaticKeepAliveClientMixin<SpaceXRocket> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<SpaceXModel> sapceXRockets = [];
-  // List<SpaceXModel> sapceXRockets1 = [];
-
-  /// ----- init ---- ///
   @override
   void initState() {
     super.initState();
-    insertDataIntoLocalDatabase(context);
+    insertDataIntoLocalDatabase();
   }
 
   /// ------ Getting Space X Rocket Details  ------ ///
-  insertDataIntoLocalDatabase(context) async {
+  insertDataIntoLocalDatabase() async {
     try {
       var response = await Dio().get('https://api.spacexdata.com/v4/rockets');
       List data = response.data;
       for (var i in data) {
-        
         // sapceXRockets.add(SpaceXModel.fromJson(i));
         setState(() {
-           databaseHelper.insertRocket(SpaceXModel.fromJson(i));
+          databaseHelper.insertRocket(SpaceXModel.fromJson(i));
           rocketListDataFromLocalDB();
         });
       }
@@ -45,10 +40,10 @@ class _SpaceXRocketState extends State<SpaceXRocket>
 
   /// ----- Get Data From LocalDb ----- ///
   void rocketListDataFromLocalDB() {
+
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
     dbFuture.then((database) {
-      Future<List<SpaceXModel>> rocketsListFuture =
-          databaseHelper.getRocketList();
+      Future<List<SpaceXModel>> rocketsListFuture = databaseHelper.getRocketList();
       rocketsListFuture.then((rocketList) {
         setState(() {
           sapceXRockets = rocketList;
@@ -74,23 +69,23 @@ class _SpaceXRocketState extends State<SpaceXRocket>
                     itemCount: sapceXRockets.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RocketDescriptionPage(
-                                      rocket: sapceXRockets[index])));
-                        },
+                        // onTap: () {
+                        //   Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => RocketDescriptionPage(
+                        //               rocket: sapceXRockets[index])));
+                        // },
                         child: Card(
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 10, bottom: 10, left: 20, right: 20),
                             child: Row(
                               children: [
-                                CircleAvatar(
+                                const CircleAvatar(
                                   radius: 50,
-                                  backgroundImage: NetworkImage(
-                                      sapceXRockets[index].flickrImages[0]),
+                                  // backgroundImage: NetworkImage(
+                                  //     sapceXRockets[index].flickrImages[0]),
                                 ),
                                 Container(
                                   width:
@@ -111,14 +106,20 @@ class _SpaceXRocketState extends State<SpaceXRocket>
                                 ),
                                 GestureDetector(
                                     onTap: () {
+                                      print("Icon Tapped..............................");
+                                      print(sapceXRockets[index]
+                                                      .isFavourite.toString());
+                                                      print(sapceXRockets[index]
+                                                      .isFavourite.runtimeType);
+                                                      print(0.runtimeType);
                                       /// ---- Updating data to localdb ---- ///
                                       databaseHelper.updateRocket(SpaceXModel(
                                           height: sapceXRockets[index].height,
                                           diameter:
                                               sapceXRockets[index].diameter,
                                           mass: sapceXRockets[index].mass,
-                                          flickrImages:
-                                              sapceXRockets[index].flickrImages,
+                                          flickr_images:
+                                              sapceXRockets[index].flickr_images,
                                           name: sapceXRockets[index].name,
                                           type: sapceXRockets[index].type,
                                           active: sapceXRockets[index].active,
@@ -138,16 +139,22 @@ class _SpaceXRocketState extends State<SpaceXRocket>
                                           description:
                                               sapceXRockets[index].description,
                                           id: sapceXRockets[index].id,
-                                          isFavourite: !sapceXRockets[index]
-                                              .isFavourite));
+                                          isFavourite: sapceXRockets[index]
+                                                      .isFavourite ==
+                                                  1
+                                              ? 0
+                                              : 1
+                                              
+                                              ));
                                       /// ---- After update the data to local db we need to get the updated data ---- ///
                                       rocketListDataFromLocalDB();
                                     },
                                     child: Icon(
                                       Icons.star,
-                                      color: sapceXRockets[index].isFavourite
-                                          ? Colors.amber
-                                          : Colors.grey,
+                                      color:
+                                          sapceXRockets[index].isFavourite == 1
+                                              ? Colors.amber
+                                              : Colors.red,
                                     ))
                               ],
                             ),

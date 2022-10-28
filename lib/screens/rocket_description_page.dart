@@ -19,9 +19,9 @@ class _RocketDescriptionPageState extends State<RocketDescriptionPage> {
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          Carousel(
-            images: widget.rocket.flickrImages,
-          ),
+          // Carousel(
+          //   images: widget.rocket.flickrImages,
+          // ),
           Card(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -110,21 +110,21 @@ class _RocketDescriptionPageState extends State<RocketDescriptionPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text("Height"),
-                    Text("${widget.rocket.height.meters}m")
+                    Text("${widget.rocket.height}m")
                   ],),
                    const SizedBox(height: 5,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Diameter"),
-                    Text('${widget.rocket.diameter.meters}m')
+                      const Text("Diameter"),
+                    Text('${widget.rocket.diameter}m')
                   ],),
                    const SizedBox(height: 5,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text("Mass"),
-                    Text("${widget.rocket.mass.kg}kg")
+                    Text("${widget.rocket.mass}kg")
                   ],),
                    const SizedBox(height: 5,),
                   
