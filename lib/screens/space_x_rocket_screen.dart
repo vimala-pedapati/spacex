@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:spacex/Database/database_helper.dart';
 import 'package:spacex/global.dart';
 import 'package:spacex/models/space_x_model.dart';
 import 'package:spacex/screens/rocket_description_page.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class SpaceXRocket extends StatefulWidget {
   @override
@@ -12,22 +14,28 @@ class SpaceXRocket extends StatefulWidget {
 
 class _SpaceXRocketState extends State<SpaceXRocket>
     with AutomaticKeepAliveClientMixin<SpaceXRocket> {
- 
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  List<SpaceXModel> sapceXRockets = [];
+  // List<SpaceXModel> sapceXRockets1 = [];
+
+  /// ----- init ---- ///
   @override
   void initState() {
     super.initState();
-    getHttp(context);
+    insertDataIntoLocalDatabase(context);
   }
 
   /// ------ Getting Space X Rocket Details  ------ ///
-  getHttp(context) async {
+  insertDataIntoLocalDatabase(context) async {
     try {
       var response = await Dio().get('https://api.spacexdata.com/v4/rockets');
       List data = response.data;
       for (var i in data) {
-        sapceXRockets.add(SpaceXModel.fromJson(i));
+        
+        // sapceXRockets.add(SpaceXModel.fromJson(i));
         setState(() {
-          
+           databaseHelper.insertRocket(SpaceXModel.fromJson(i));
+          rocketListDataFromLocalDB();
         });
       }
     } on DioError catch (e) {
@@ -35,11 +43,22 @@ class _SpaceXRocketState extends State<SpaceXRocket>
     }
   }
 
+  /// ----- Get Data From LocalDb ----- ///
+  void rocketListDataFromLocalDB() {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    dbFuture.then((database) {
+      Future<List<SpaceXModel>> rocketsListFuture =
+          databaseHelper.getRocketList();
+      rocketsListFuture.then((rocketList) {
+        setState(() {
+          sapceXRockets = rocketList;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("...............");
-    print(sapceXRockets);
-    print("...............");
     return Scaffold(
       appBar: AppBar(
         title: const Text('SpaceXRocket'),
@@ -49,14 +68,18 @@ class _SpaceXRocketState extends State<SpaceXRocket>
           Container(
             height: MediaQuery.of(context).size.height * 0.8,
             width: MediaQuery.of(context).size.width,
-            child: sapceXRockets.length == 0
-                ? Center(child: Text("Loading......."))
+            child: sapceXRockets.isEmpty
+                ? const Center(child: Text("Loading......."))
                 : ListView.builder(
                     itemCount: sapceXRockets.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: (){
-                          Navigator.push(context,MaterialPageRoute(builder:  (context) => RocketDescriptionPage(rocket: sapceXRockets[index])));
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RocketDescriptionPage(
+                                      rocket: sapceXRockets[index])));
                         },
                         child: Card(
                           child: Padding(
@@ -70,18 +93,62 @@ class _SpaceXRocketState extends State<SpaceXRocket>
                                       sapceXRockets[index].flickrImages[0]),
                                 ),
                                 Container(
-                                  width: MediaQuery.of(context).size.width*0.5,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
                                   child: Column(
                                     children: [
                                       Text(sapceXRockets[index].name),
                                       Text(sapceXRockets[index].company),
                                       Text(sapceXRockets[index].country),
-                                      Text(sapceXRockets[index].firstFlight.toString()),
-                                      Text(sapceXRockets[index].isFavourite.toString())
+                                      Text(sapceXRockets[index]
+                                          .firstFlight
+                                          .toString()),
+                                      Text(sapceXRockets[index]
+                                          .isFavourite
+                                          .toString())
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.star)
+                                GestureDetector(
+                                    onTap: () {
+                                      /// ---- Updating data to localdb ---- ///
+                                      databaseHelper.updateRocket(SpaceXModel(
+                                          height: sapceXRockets[index].height,
+                                          diameter:
+                                              sapceXRockets[index].diameter,
+                                          mass: sapceXRockets[index].mass,
+                                          flickrImages:
+                                              sapceXRockets[index].flickrImages,
+                                          name: sapceXRockets[index].name,
+                                          type: sapceXRockets[index].type,
+                                          active: sapceXRockets[index].active,
+                                          stages: sapceXRockets[index].stages,
+                                          boosters:
+                                              sapceXRockets[index].boosters,
+                                          costPerLaunch: sapceXRockets[index]
+                                              .costPerLaunch,
+                                          successRatePct: sapceXRockets[index]
+                                              .successRatePct,
+                                          firstFlight:
+                                              sapceXRockets[index].firstFlight,
+                                          country: sapceXRockets[index].country,
+                                          company: sapceXRockets[index].company,
+                                          wikipedia:
+                                              sapceXRockets[index].wikipedia,
+                                          description:
+                                              sapceXRockets[index].description,
+                                          id: sapceXRockets[index].id,
+                                          isFavourite: !sapceXRockets[index]
+                                              .isFavourite));
+                                      /// ---- After update the data to local db we need to get the updated data ---- ///
+                                      rocketListDataFromLocalDB();
+                                    },
+                                    child: Icon(
+                                      Icons.star,
+                                      color: sapceXRockets[index].isFavourite
+                                          ? Colors.amber
+                                          : Colors.grey,
+                                    ))
                               ],
                             ),
                           ),

@@ -1,6 +1,7 @@
-import 'dart:html';
+ 
 import 'dart:io';
 
+import 'package:spacex/screens/space_x_rocket_screen.dart';
 import 'package:spacex/utils/dbkeys.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
@@ -94,5 +95,13 @@ Future<int> getCount() async{
   return result!;
 }
 
-
+/// --- Convert Map List into SpaceXModel list --- ///
+Future<List<SpaceXModel>> getRocketList ()async{
+  var rocketMapList = await getRocketMapList();
+  List<SpaceXModel> rocketList = [];
+  for(var i in rocketMapList){
+      rocketList.add(SpaceXModel.fromJson(i));
+  }
+  return rocketList;
 }
+ }
