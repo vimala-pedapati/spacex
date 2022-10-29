@@ -40,18 +40,6 @@ class SpaceXModel {
   int isFavourite;
   
   factory SpaceXModel.fromJson(Map<String, dynamic> jsonData) {
-    // print(".................");
-    // for(var i in jsonData.keys){
-    //   print(i);
-    // }
-    // print(jsonData["flickr_images"]);
-    // print(".................");
-    // List images = jsonData["flickr_images"];
-    // String imageString = '';
-    // for (var i in images) {
-    //   imageString = '$imageString$i,';
-    // }
-
     return SpaceXModel(
       height: json.encode(jsonData['height']),
       diameter: json.encode(jsonData['diameter']),
@@ -70,7 +58,7 @@ class SpaceXModel {
       wikipedia: jsonData["wikipedia"],
       description: jsonData["description"],
       id: jsonData["id"],
-      isFavourite: 0,
+      isFavourite: jsonData["isFavourite"] ?? 0 ,
     );
   }
 

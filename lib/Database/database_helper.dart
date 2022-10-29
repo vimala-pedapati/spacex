@@ -1,4 +1,3 @@
- 
 import 'dart:io';
 
 import 'package:spacex/screens/space_x_rocket_screen.dart';
@@ -19,21 +18,19 @@ class DatabaseHelper {
     return _databaseHelper!;
   }
 
-
- 
-  Future<Database?> get database async{
+  Future<Database?> get database async {
     _database ??= await initializeDatabase();
     return _database;
   }
 
-
-
-  Future<Database> initializeDatabase() async{
+  Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = '${directory.path}rockets.db';
-    var rocketsDatabase = await openDatabase(path,version: 1,onCreate:  _createDb);
+    var rocketsDatabase =
+        await openDatabase(path, version: 1, onCreate: _createDb);
     return rocketsDatabase;
   }
+
   void _createDb(Database db, int newVersion) async {
     await db.execute('''CREATE TABLE ${LocalDbKeys.dbTableName} (
      ${LocalDbKeys.colId} TEXT,
@@ -57,55 +54,58 @@ class DatabaseHelper {
       )''');
   }
 
-/// ---- Fetch Operation: Get all the rocket objects from database ---- ///
+  /// ---- Fetch Operation: Get all the rocket objects from database ---- ///
 
-Future<List<Map<String,dynamic>>> getRocketMapList() async{
-  Database? db = await database;
-  var result = await db!.query(LocalDbKeys.dbTableName);
-  return result;
-}
-
-/// ---- Insert Operation: Update a rocket object and save it to database ---- ///
-
-Future<int> insertRocket(SpaceXModel rocket) async{
-   Database? db = await database;
-   var result = await db!.insert(LocalDbKeys.dbTableName,  rocket.toJson());
-   return result;
-}
-
-/// ---- Update Operation: Update a rocket object and save it to database ---- ///
-
-Future<int> updateRocket(SpaceXModel rocket) async{
-  print("Updating local db data ...............");
-   Database? db = await database;
-   var result = await db!.update(LocalDbKeys.dbTableName,  rocket.toJson(),where: '${LocalDbKeys.colId} = ?', whereArgs: [rocket.id] );
-   return result;
-}
-
-/// ---- Delete0 Operation: Delete a Note object from database ---- ///
-Future<int> deleteRocket(int id) async{
-   Database? db = await database;
-   var result = await db!.delete (LocalDbKeys.dbTableName, where: '${LocalDbKeys.dbTableName} = ?' , whereArgs: [id]);
-   return result;
-}
-
-/// ---- Get the number of objects in the database ---- ///
-Future<int> getCount() async{
-  Database? db = await database;
-  List<Map<String, dynamic>> x = await db!.rawQuery(' SELECT COUNT (*) from ${LocalDbKeys.dbTableName}');
-  int? result = Sqflite.firstIntValue(x);
-  return result!;
-}
-
-/// --- Convert Map List into SpaceXModel list --- ///
-Future<List<SpaceXModel>> getRocketList ()async{
-  var rocketMapList = await getRocketMapList();
-  print(rocketMapList[0]);
-  print("-----------------------");
-  List<SpaceXModel> rocketList = [];
-  for(var i in rocketMapList){
-      rocketList.add(SpaceXModel.fromJson(i));
+  Future<List<Map<String, dynamic>>> getRocketMapList() async {
+    Database? db = await database;
+    var result = await db!.query(LocalDbKeys.dbTableName);
+    return result;
   }
-  return rocketList;
+
+  /// ---- Insert Operation: Update a rocket object and save it to database ---- ///
+
+  Future<int> insertRocket(SpaceXModel rocket) async {
+    Database? db = await database;
+    var result = await db!.insert(LocalDbKeys.dbTableName, rocket.toJson());
+    return result;
+  }
+
+  /// ---- Update Operation: Update a rocket object and save it to database ---- ///
+
+  Future<int> updateRocket(SpaceXModel rocket) async {
+    Database? db = await database;
+    var result = await db!.update(LocalDbKeys.dbTableName, rocket.toJson(), where: '${LocalDbKeys.colId} = ?', whereArgs: [rocket.id]);
+    return result;
+  }
+
+  /// ---- Delete Operation: Delete a Note object from database ---- ///
+  Future<int> deleteRocket(int id) async {
+    Database? db = await database;
+    var result = await db!.delete(LocalDbKeys.dbTableName,
+        where: '${LocalDbKeys.dbTableName} = ?', whereArgs: [id]);
+    return result;
+  }
+
+  /// ---- Get the number of objects in the database ---- ///
+  Future<int> getCount() async {
+    Database? db = await database;
+    List<Map<String, dynamic>> x =
+    await db!.rawQuery(' SELECT COUNT (*) from ${LocalDbKeys.dbTableName}');
+    int? result = Sqflite.firstIntValue(x);
+    // print("$result [RED]");
+    return result!;
+  }
+
+  /// --- Convert Map List into SpaceXModel list --- ///
+  Future<List<SpaceXModel>> getRocketList() async {
+    print("Get rocket list called");
+    var rocketMapList = await getRocketMapList();
+    List<SpaceXModel> rocketList = [];
+    for (var i in rocketMapList) {
+      print(i["isFavourite"]);
+      rocketList.add(SpaceXModel.fromJson(i));
+    }
+
+    return rocketList;
+  }
 }
- }
