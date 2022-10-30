@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:spacex/Database/database_helper.dart';
- 
+
 import 'package:spacex/models/space_x_model.dart';
 import 'package:spacex/screens/rocket_description_page.dart';
+import 'package:spacex/utils/utils.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class SpaceXRocket extends StatefulWidget {
@@ -14,23 +17,22 @@ class SpaceXRocket extends StatefulWidget {
 class _SpaceXRocketState extends State<SpaceXRocket>
     with AutomaticKeepAliveClientMixin<SpaceXRocket> {
   DatabaseHelper databaseHelper = DatabaseHelper();
-  List<SpaceXModel> sapceXRockets = [];
+  List<SpaceXModel> spaceXRockets = [];
+
   @override
   void initState() {
     super.initState();
-    print("Init Called ............................");
     insertDataIntoLocalDatabase();
   }
 
   /// ------ Getting Space X Rocket Details  ------ ///
   insertDataIntoLocalDatabase() async {
+    int count = 0;
+    await databaseHelper.getCount().then((value) => count = value);
     try {
       var response = await Dio().get('https://api.spacexdata.com/v4/rockets');
       List data = response.data;
-      int count = 0;
-      await databaseHelper.getCount().then((value) => count = value);
-      print('count: ${count} [G]');
-      if(count == 0){
+      if (count == 0) {
         print("if case [R]");
         for (var i in data) {
           setState(() {
@@ -38,43 +40,62 @@ class _SpaceXRocketState extends State<SpaceXRocket>
             rocketListDataFromLocalDB();
           });
         }
-      }else{
+      } else {
         print("else case [R]");
         for (var i in data) {
-          setState(() {
-            databaseHelper.updateRocket(SpaceXModel.fromJson(i));
+          var localData = await databaseHelper.getRocketList();
+          if (localData.length == count) {
+            print("Nothing to Update into local db");
+          } else {
             rocketListDataFromLocalDB();
-          });
+            for (var i in data) {
+              for (var j in spaceXRockets) {
+                if (i['id'] == j.id) {
+                  break;
+                }
+                setState(() {
+                  databaseHelper.insertRocket(SpaceXModel.fromJson(i));
+                  rocketListDataFromLocalDB();
+                });
+              }
+            }
+          }
+          rocketListDataFromLocalDB();
         }
       }
-
-
-    } on DioError catch (e) {
+    } catch (e) {
+      rocketListDataFromLocalDB();
+      print("....................catch error....................[R]");
       print(e);
     }
   }
 
   /// ----- Get Data From LocalDb ----- ///
-  void rocketListDataFromLocalDB() async  {
+  void rocketListDataFromLocalDB() async {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database)  {
-      Future<List<SpaceXModel>> rocketsListFuture =  databaseHelper.getRocketList();
+    dbFuture.then((database) {
+      Future<List<SpaceXModel>> rocketsListFuture =
+          databaseHelper.getRocketList();
       rocketsListFuture.then((rocketList) {
         setState(() {
-          sapceXRockets = rocketList;
+          spaceXRockets = rocketList;
         });
       });
-     });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(databaseHelper.getCount().then((value) => print(value)));
-    print("---------------");
-
+    insertDataIntoLocalDatabase();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SpaceXRocket'),
+        title: const Text('SpaceXRockets'),
+        actions: const [
+          Icon(Icons.logout),
+          SizedBox(
+            width: 40,
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -82,81 +103,134 @@ class _SpaceXRocketState extends State<SpaceXRocket>
             Container(
               height: MediaQuery.of(context).size.height * 0.8,
               width: MediaQuery.of(context).size.width,
-              child: sapceXRockets.isEmpty
+              child: spaceXRockets.isEmpty
                   ? const Center(child: Text("Loading......."))
                   : ListView.builder(
-                      itemCount: sapceXRockets.length,
+                      itemCount: spaceXRockets.length,
                       itemBuilder: (context, index) {
-                        return InkWell(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //           builder: (context) => RocketDescriptionPage(
-                          //               rocket: sapceXRockets[index])));
-                          // },
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 10, bottom: 10, left: 20, right: 20),
-                              child: Row(
-                                children: [
-                                  const CircleAvatar(
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, bottom: 10, left: 20, right: 20),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RocketDescriptionPage(
+                                                    rocket:
+                                                        spaceXRockets[index])));
+                                  },
+                                  child: CircleAvatar(
                                     radius: 50,
-                                    // backgroundImage: NetworkImage(
-                                    //     sapceXRockets[index].flickrImages[0]),
+                                    backgroundColor: Colors.grey,
+                                    backgroundImage: NetworkImage(Utils()
+                                        .getImages(spaceXRockets[index]
+                                            .flickr_images)[0]),
+                                    // child: Icon(Icons.album),
                                   ),
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    child: Column(
-                                      children: [
-                                        Text(sapceXRockets[index].name),
-                                        Text(sapceXRockets[index].company),
-                                        Text(sapceXRockets[index].country),
-                                        Text(sapceXRockets[index]
-                                            .firstFlight
-                                            .toString()),
-                                        Text(sapceXRockets[index]
-                                            .isFavourite
-                                            .toString())
-                                      ],
-                                    ),
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text("Name: "),
+                                          Text(spaceXRockets[index].name),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text("Company: "),
+                                          Text(spaceXRockets[index].company),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Country: "),
+                                          SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.25,
+                                              child: Text(
+                                                spaceXRockets[index].country,
+                                                maxLines: 2,
+                                              )),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text("First Launch: "),
+                                          Text(spaceXRockets[index]
+                                              .firstFlight
+                                              .substring(0, 10)
+                                              .toString()),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  GestureDetector(
-                                      onTap: () {
-                                        /// ---- Updating data to localdb ---- ///
-                                        databaseHelper.updateRocket(SpaceXModel(
-                                            height: sapceXRockets[index].height,
-                                            diameter: sapceXRockets[index].diameter,
-                                            mass: sapceXRockets[index].mass,
-                                            flickr_images: sapceXRockets[index].flickr_images,
-                                            name: sapceXRockets[index].name,
-                                            type: sapceXRockets[index].type,
-                                            active: sapceXRockets[index].active,
-                                            stages: sapceXRockets[index].stages,
-                                            boosters: sapceXRockets[index].boosters,
-                                            costPerLaunch: sapceXRockets[index].costPerLaunch,
-                                            successRatePct: sapceXRockets[index].successRatePct,
-                                            firstFlight: sapceXRockets[index].firstFlight,
-                                            country: sapceXRockets[index].country,
-                                            company: sapceXRockets[index].company,
-                                            wikipedia: sapceXRockets[index].wikipedia,
-                                            description: sapceXRockets[index].description,
-                                            id: sapceXRockets[index].id,
-                                            isFavourite: sapceXRockets[index].isFavourite == 1 ? 0 : 1));
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      /// ---- Updating data to localdb ---- ///
+                                      databaseHelper.updateRocket(SpaceXModel(
+                                          height: spaceXRockets[index].height,
+                                          diameter:
+                                              spaceXRockets[index].diameter,
+                                          mass: spaceXRockets[index].mass,
+                                          flickr_images: spaceXRockets[index]
+                                              .flickr_images,
+                                          name: spaceXRockets[index].name,
+                                          type: spaceXRockets[index].type,
+                                          active: spaceXRockets[index].active,
+                                          stages: spaceXRockets[index].stages,
+                                          boosters:
+                                              spaceXRockets[index].boosters,
+                                          costPerLaunch: spaceXRockets[index]
+                                              .costPerLaunch,
+                                          successRatePct: spaceXRockets[index]
+                                              .successRatePct,
+                                          firstFlight:
+                                              spaceXRockets[index].firstFlight,
+                                          country: spaceXRockets[index].country,
+                                          company: spaceXRockets[index].company,
+                                          wikipedia:
+                                              spaceXRockets[index].wikipedia,
+                                          description:
+                                              spaceXRockets[index].description,
+                                          id: spaceXRockets[index].id,
+                                          isFavourite: spaceXRockets[index]
+                                                      .isFavourite ==
+                                                  1
+                                              ? 0
+                                              : 1));
 
-                                        /// ---- After update the data to local db we need to get the updated data ---- ///
-                                        rocketListDataFromLocalDB();
-                                      },
-                                      child: Icon(
-                                        Icons.star,
-                                        color:sapceXRockets[index].isFavourite == 1
-                                                ? Colors.amber
-                                                : Colors.grey,
-                                      ))
-                                ],
-                              ),
+                                      /// ---- After update the data to local db we need to get the updated data ---- ///
+                                      rocketListDataFromLocalDB();
+                                    },
+                                    child: Icon(
+                                      Icons.star,
+                                      color:
+                                          spaceXRockets[index].isFavourite == 1
+                                              ? Colors.amber
+                                              : Colors.grey,
+                                    ))
+                              ],
                             ),
                           ),
                         );

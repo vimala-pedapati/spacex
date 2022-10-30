@@ -98,14 +98,12 @@ class DatabaseHelper {
 
   /// --- Convert Map List into SpaceXModel list --- ///
   Future<List<SpaceXModel>> getRocketList() async {
-    print("Get rocket list called");
+    print("Get rocket list called [B]");
     var rocketMapList = await getRocketMapList();
     List<SpaceXModel> rocketList = [];
     for (var i in rocketMapList) {
-      print(i["isFavourite"]);
       rocketList.add(SpaceXModel.fromJson(i));
     }
-
     return rocketList;
   }
 }

@@ -1,6 +1,14 @@
+import 'dart:async';
 import 'dart:convert' ;
 
 import 'package:flutter/material.dart';
+import 'package:spacex/models/space_x_model.dart';
+import 'package:spacex/screens/rocket_description_page.dart';
+import 'package:spacex/screens/space_x_rocket_screen.dart';
+import 'package:sqflite/sqlite_api.dart';
+
+import '../Database/database_helper.dart';
+import '../utils/utils.dart';
 
 class FavouriteRockets extends StatefulWidget {
   @override
@@ -9,25 +17,159 @@ class FavouriteRockets extends StatefulWidget {
 
 class _FavouriteRocketsState extends State<FavouriteRockets>
     with AutomaticKeepAliveClientMixin<FavouriteRockets> {
+
+DatabaseHelper databaseHelper = DatabaseHelper();
+List<SpaceXModel>  favouriteRockets = [];
+
+
+getFavouriteRockets() async{
+  List<SpaceXModel> rockets = await databaseHelper.getRocketList();
+  favouriteRockets = [];
+  for(var i in rockets){
+    if(i.isFavourite == 1){
+      favouriteRockets.add(i);
+      setState(() {});
+    }
+  }
+}
+@override
+
+
   @override
   void initState() {
     super.initState();
+
+
+       getFavouriteRockets();
+
+   
     print('initState FavouriteRockets');
   }
- 
+  @override
+  
+
   @override
   Widget build(BuildContext context) {
+    getFavouriteRockets();
     print('build FavouriteRockets');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FavouriteRockets'),
+        title: const Text('Favourite Rockets'),
+         actions: const [
+          Icon(Icons.logout),
+          SizedBox(width: 40,)
+        ],
       ),
-      body: const Center(
-        child: Text(
-          'This is content of FavouriteRockets',
-          style: TextStyle(fontSize: 30),
-        ),
-      ),
+      body:  Container(
+        child: favouriteRockets.isEmpty? const Center(child: Text("No Fasvourites yet")):  ListView.builder(
+                      itemCount: favouriteRockets.length,
+                      itemBuilder: (context, index) {
+                        return 
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 20, right: 20),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                     onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RocketDescriptionPage(
+                                        rocket: favouriteRockets[index])));
+                          },
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: NetworkImage(Utils().getImages(favouriteRockets[index].flickr_images)[0]),
+                                      // child: Icon(Icons.album),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * 0.5,
+                                    padding: const EdgeInsets.only(left: 20,right: 20),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text("Name: "),
+                                            Text(favouriteRockets[index].name),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text("Company: "),
+                                            Text(favouriteRockets[index].company),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Country: "),
+                                            SizedBox(
+                                               width: MediaQuery.of(context).size.width * 0.25,
+                                              child: Text(favouriteRockets[index].country, maxLines: 2,)),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text("First Launch: "),
+                                            Text(favouriteRockets[index].firstFlight.substring(0,10)
+                                                .toString()),
+                                          ],
+                                        ),
+                                         
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+
+
+                                        
+                                        /// ---- Updating data to localdb ---- ///
+                                        databaseHelper.updateRocket(SpaceXModel(
+                                            height: favouriteRockets[index].height,
+                                            diameter: favouriteRockets[index].diameter,
+                                            mass: favouriteRockets[index].mass,
+                                            flickr_images: favouriteRockets[index].flickr_images,
+                                            name:favouriteRockets[index].name,
+                                            type: favouriteRockets[index].type,
+                                            active: favouriteRockets[index].active,
+                                            stages: favouriteRockets[index].stages,
+                                            boosters: favouriteRockets[index].boosters,
+                                            costPerLaunch: favouriteRockets[index].costPerLaunch,
+                                            successRatePct: favouriteRockets[index].successRatePct,
+                                            firstFlight: favouriteRockets[index].firstFlight,
+                                            country: favouriteRockets[index].country,
+                                            company: favouriteRockets[index].company,
+                                            wikipedia: favouriteRockets[index].wikipedia,
+                                            description: favouriteRockets[index].description,
+                                            id: favouriteRockets[index].id,
+                                            isFavourite: favouriteRockets[index].isFavourite == 1 ? 0 : 1));
+
+                                        /// ---- After update the data to local db we need to get the updated data ---- ///
+                                         getFavouriteRockets();
+                                      },
+                                      child: Icon(
+                                        Icons.star,
+                                        color:favouriteRockets[index].isFavourite == 1
+                                                ? Colors.amber
+                                                : Colors.grey,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          
+                        );
+                      }),
+           
+           
+      )
     );
   }
 

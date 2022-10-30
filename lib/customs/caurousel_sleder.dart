@@ -67,7 +67,7 @@ class _CarouselState extends State<Carousel> {
                     borderRadius: const BorderRadius.all(Radius.circular(5.0)),
                     child: Stack(
                       children: <Widget>[
-                        Image.network(item,
+                        Image.network((item as String).trim(),
                             fit: BoxFit.fill,
                             width: double.infinity,
                             height:250),

@@ -17,7 +17,11 @@ class _UpcomingLaunchesState extends State<UpcomingLaunches> with AutomaticKeepA
     print('build UpcomingLaunches');
     return Scaffold(
       appBar: AppBar(
-        title: Text('UpcomingLaunches'),
+        title: Text('Upcoming Launches'),
+         actions: const [
+          Icon(Icons.logout),
+          SizedBox(width: 40,)
+        ],
       ),
       body: Center(
         child: Text(
