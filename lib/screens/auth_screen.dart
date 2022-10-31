@@ -12,7 +12,7 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 1,
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
@@ -56,7 +56,7 @@ class AuthScreen extends StatelessWidget {
                     end: Alignment.topRight,
                     colors: AppColors.authBackGroundColors)),
             child:   const TabBarView(children: [
-              LoginContainer(),
+              // LoginContainer(),
               SignUpContainer(),
             ]),
           ),

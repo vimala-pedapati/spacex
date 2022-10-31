@@ -27,7 +27,13 @@ class _SpaceXRocketState extends State<SpaceXRocket>
   void initState() {
     super.initState();
     insertDataIntoLocalDatabase();
-    Timer.periodic(const Duration(seconds:1), (timer)=> rocketListDataFromLocalDB() );
+
+    Timer.periodic(const Duration(seconds:1), (timer) {
+      if (firebaseAuth.currentUser != null) {
+        rocketListDataFromLocalDB();
+      }
+    });
+
   }
 
 
@@ -94,11 +100,7 @@ class _SpaceXRocketState extends State<SpaceXRocket>
     });
   }
 @override
-  void dispose() {
-    // TODO: implement dispose
-  spaceXRockets.clear();
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context) {
     // insertDataIntoLocalDatabase();

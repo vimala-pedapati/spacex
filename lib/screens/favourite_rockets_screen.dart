@@ -46,9 +46,15 @@ class _FavouriteRocketsState extends State<FavouriteRockets>
   @override
   void initState() {
     super.initState();
-
     getFavouriteRockets();
-    Timer.periodic(const Duration(seconds:1), (timer)=> getFavouriteRockets() );
+
+      Timer.periodic(const Duration(seconds:1), (timer) {
+        if (firebaseAuth.currentUser != null) {
+          getFavouriteRockets();
+        }
+      });
+
+
     print('initState FavouriteRockets.....[BLUE]');
   }
 
