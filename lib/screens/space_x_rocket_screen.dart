@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:spacex/Database/database_helper.dart';
+import 'package:spacex/global.dart';
 
 import 'package:spacex/models/space_x_model.dart';
+import 'package:spacex/screens/auth_screen.dart';
 import 'package:spacex/screens/rocket_description_page.dart';
 import 'package:spacex/utils/utils.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -91,15 +93,23 @@ class _SpaceXRocketState extends State<SpaceXRocket>
       });
     });
   }
-
+@override
+  void dispose() {
+    // TODO: implement dispose
+  spaceXRockets.clear();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     // insertDataIntoLocalDatabase();
     return Scaffold(
       appBar: AppBar(
         title: const Text('SpaceXRockets'),
-        actions: const [
-          Icon(Icons.logout),
+        actions:  [
+          IconButton(icon: Icon(Icons.logout),onPressed: (){
+            firebaseAuth.signOut();
+            Navigator.pushReplacement( context, MaterialPageRoute(builder:  (context)=> const AuthScreen()));
+          },),
           SizedBox(
             width: 40,
           )

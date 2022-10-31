@@ -1,0 +1,33 @@
+class AppStrings{
+  static String splashText = "Space x Go";
+  static String spaceXRockets = "Space x Rockets";
+  static String login = "Login";
+  static String register = "Register";
+  static String nameHintText = "Name";
+  static String mailHintText = "E-Mail";
+  static String phoneNumberHintText = "Phone Number";
+  static String passwordHintText = "Password";
+  static String confirmPasswordHintText = "Confirm Password";
+  static String locationHintText = "Get my location";
+  static String getMyCurrentLocation = "Get My Current Location";
+  static String signUp = "Sign Up";
+  static String noInternetConnection = "No internet connection. Please check your Internet Connection.";
+  static String locationPermissionDenied = "Permissions for locations were disabled";
+  static String invalidName = "Enter a valid Name";
+  static String invalidMobileNumber = "Enter a valid Mobile Number";
+  static String invalidMailAddress = "Enter a valid mail Address";
+  static String invalidPassword = "Enter a valid password";
+  static String invalidLocation = "Enter your location";
+  static String passwordsShouldMatch = "Password and Conform password should match";
+  static String emptyProfile = "Choose profile";
+  static String plaeseWait = " Please Wait .....";
+  static String registeringAccount = "Registering Account";
+  static String checkingCredentials = "Checking Credentials";
+  static String  noRecordExists = "No record exists";
+  static String myHome = " My Home ";
+  static String myOrders = " My Orders ";
+  static String history = " History ";
+  static String search = " Search ";
+  static String addNewAddress = " Add New Addess";
+  static String signOut = ' Sign Out';
+}

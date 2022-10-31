@@ -29,11 +29,17 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  dio: ^4.0.6 
+  dio: ^4.0.6
+  lottie: ^1.4.3
   carousel_slider: ^4.1.1
   sqflite: ^2.1.0+1
   path_provider: ^2.0.11
   intl: ^0.17.0
+  tbib_splash_screen: ^0.0.6
+  firebase_core: ^2.1.1
+  firebase_auth: ^4.1.0
+  responsive_sizer: ^3.1.1
+  fluttertoast: 8.0.9
   flutter:
     sdk: flutter
 
@@ -65,8 +71,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    -  assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -80,6 +86,22 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family:  Acme
+      fonts:
+        - asset: assets/fonts/Acme-Regular.ttf
+
+    - family: Kiwimaru
+      fonts:
+        - asset: assets/fonts/KiwiMaru-Medium.ttf
+
+    - family:  Signatra
+      fonts:
+        - asset: assets/fonts/Signatra.ttf
+
+    - family: Trainone
+      fonts:
+        - asset: assets/fonts/TrainOne-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

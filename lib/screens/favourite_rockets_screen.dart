@@ -8,7 +8,9 @@ import 'package:spacex/screens/space_x_rocket_screen.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 import '../Database/database_helper.dart';
+import '../global.dart';
 import '../utils/utils.dart';
+import 'auth_screen.dart';
 
 class FavouriteRockets extends StatefulWidget {
   @override
@@ -58,8 +60,11 @@ class _FavouriteRocketsState extends State<FavouriteRockets>
     return Scaffold(
         appBar: AppBar(
           title: const Text('Favourite Rockets'),
-          actions: const [
-            Icon(Icons.logout),
+          actions:   [
+            IconButton(icon: Icon(Icons.logout),onPressed: (){
+              firebaseAuth.signOut();
+              Navigator.pushReplacement( context, MaterialPageRoute(builder:  (context)=> const AuthScreen()));
+            },),
             SizedBox(
               width: 40,
             )
@@ -67,12 +72,10 @@ class _FavouriteRocketsState extends State<FavouriteRockets>
         ),
         body: Container(
           child: favouriteRockets.isEmpty
-              ? const Center(child: Text("No Fasvourites yet"))
+              ? const Center(child: Text("No Favourites yet"))
               : ListView.builder(
                   itemCount: favouriteRockets.length,
                   itemBuilder: (context, index) {
-
-
                     return   Row(
                       children: [
                         Card(

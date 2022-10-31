@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "276653007076",
+    "project_id": "spacex-e6378",
+    "storage_bucket": "spacex-e6378.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276653007076:android:caf61ab1d3a461137eccf1",
+        "android_client_info": {
+          "package_name": "com.vimala.spacex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276653007076-i11cfgo2v7bi751opd0jk6ujgkej60ns.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZq71tFZ3iagGGcA63b-Vo35UGw6BGmW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276653007076-i11cfgo2v7bi751opd0jk6ujgkej60ns.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

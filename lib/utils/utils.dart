@@ -1,10 +1,9 @@
-class Utils{
-  List getImages(String images){
-    // print('Its utils....');
-    String removingBraces = images.replaceAll( '[',  '').trim();
-    // print(removingBraces);
-    removingBraces = removingBraces.replaceAll( ']', '').trim();
-    // print(removingBraces);
+class Utils {
+  List getImages(String images) {
+    String removingBraces = images.replaceAll('[', '').trim();
+
+    removingBraces = removingBraces.replaceAll(']', '').trim();
+
     List splittedImages = removingBraces.split(',');
 
     return splittedImages;
