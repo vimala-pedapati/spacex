@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:spacex/customs/caurousel_sleder.dart';
+import 'package:spacex/customs/caurousel_slider.dart';
 import 'package:spacex/models/space_x_model.dart';
 import 'package:spacex/utils/utils.dart';
 

@@ -8,7 +8,7 @@ import 'package:spacex/models/space_x_model.dart';
 import 'package:spacex/screens/rocket_description_page.dart';
 import 'package:spacex/utils/utils.dart';
 import 'package:sqflite/sqlite_api.dart';
-
+import 'dart:async';
 class SpaceXRocket extends StatefulWidget {
   @override
   _SpaceXRocketState createState() => _SpaceXRocketState();
@@ -19,11 +19,19 @@ class _SpaceXRocketState extends State<SpaceXRocket>
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<SpaceXModel> spaceXRockets = [];
 
+
+
   @override
   void initState() {
     super.initState();
     insertDataIntoLocalDatabase();
+    Timer.periodic(const Duration(seconds:1), (timer)=> rocketListDataFromLocalDB() );
   }
+
+
+
+
+
 
   /// ------ Getting Space X Rocket Details  ------ ///
   insertDataIntoLocalDatabase() async {
@@ -86,7 +94,7 @@ class _SpaceXRocketState extends State<SpaceXRocket>
 
   @override
   Widget build(BuildContext context) {
-    insertDataIntoLocalDatabase();
+    // insertDataIntoLocalDatabase();
     return Scaffold(
       appBar: AppBar(
         title: const Text('SpaceXRockets'),
@@ -143,45 +151,13 @@ class _SpaceXRocketState extends State<SpaceXRocket>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          const Text("Name: "),
-                                          Text(spaceXRockets[index].name),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Company: "),
-                                          Text(spaceXRockets[index].company),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text("Country: "),
-                                          SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.25,
-                                              child: Text(
-                                                spaceXRockets[index].country,
-                                                maxLines: 2,
-                                              )),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("First Launch: "),
-                                          Text(spaceXRockets[index]
-                                              .firstFlight
-                                              .substring(0, 10)
-                                              .toString()),
-                                        ],
-                                      ),
+                                      Text("Name:   ${spaceXRockets[index].name}"),
+                                      Text("Company:  ${spaceXRockets[index].company} "),
+                                      Text("Country:  ${  spaceXRockets[index].country}"),
+                                      Text("First Launch:  ${spaceXRockets[index]
+                                           .firstFlight
+                                           .substring(0, 10)
+                                           .toString()}"),
                                     ],
                                   ),
                                 ),
@@ -230,6 +206,7 @@ class _SpaceXRocketState extends State<SpaceXRocket>
                                               ? Colors.amber
                                               : Colors.grey,
                                     ))
+                            
                               ],
                             ),
                           ),
